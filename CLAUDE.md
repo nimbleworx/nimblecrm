@@ -34,9 +34,13 @@ Also early-stage startups who need a simple CRM with AI capture built in from da
 
 \## Product status
 
-Very early stage — concept and scaffold. Treat every session as greenfield.
+Early stage. Confirm what exists before building anything new.
 
-Confirm what exists before building anything new.
+What has been built:
+
+\- Supabase Auth (email/password sign-up and sign-in, per-user RLS on crm_store)
+\- Lightweight built-in CRM (contacts, pipeline, activity log, AI Radar, reminders, voice notes)
+\- AI voice note processing via Claude API (`/api/ai`)
 
 
 
@@ -89,6 +93,23 @@ Built-in lightweight CRM available for users without an existing CRM.
 \- Check package.json for UI library before assuming
 
 
+
+\## Local development environment
+
+Two separate file systems are in play:
+
+\- Claude Code runs in Linux/WSL at `/home/user/nimblecrm`
+\- The dev server runs from Windows PowerShell at `C:\Users\davie\Projects\nimblecrm`
+
+These are not the same files. After making changes, the user must pull them into the Windows copy before testing:
+
+```powershell
+git pull origin <branch>
+```
+
+Then restart the dev server (`npm run dev`) to pick up the changes.
+
+Do not tell the user to edit files directly or clear caches until after they have pulled the latest changes.
 
 \## Backlog
 
@@ -148,7 +169,7 @@ When asked to log something as a backlog item, create a GitHub Issue.
 
 \- Add npm packages without checking first
 
-\- Modify Supabase schema without showing the migration file first
+\- Modify Supabase schema without showing the migration file first (migrations are NOT auto-applied — the user must paste them into Database → SQL Editor in the Supabase dashboard manually)
 
 \- Push directly to main
 

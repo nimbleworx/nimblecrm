@@ -3,14 +3,12 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 
 // ── Supabase persistence helpers ──────────────────────────────────────────────
-const USER_ID = "default"; // Replace with auth.user.id once you add Supabase Auth
-
-const load = async (key: string, fallback: any) => {
+const load = async (userId: string, key: string, fallback: any) => {
   try {
     const { data } = await supabase
       .from("crm_store")
       .select("value")
-      .eq("user_id", USER_ID)
+      .eq("user_id", userId)
       .eq("key", key)
       .single();
     return data ? JSON.parse(data.value) : fallback;
@@ -19,10 +17,10 @@ const load = async (key: string, fallback: any) => {
   }
 };
 
-const save = async (key: string, val: any) => {
+const save = async (userId: string, key: string, val: any) => {
   try {
     await supabase.from("crm_store").upsert(
-      { user_id: USER_ID, key, value: JSON.stringify(val) },
+      { user_id: userId, key, value: JSON.stringify(val) },
       { onConflict: "user_id,key" }
     );
   } catch {}
@@ -191,7 +189,7 @@ const avatarColor = (name: string) => {
 };
 
 // ── Main CRM Component ────────────────────────────────────────────────────────
-export default function CRM() {
+export default function CRM({ user }: { user: { id: string; email?: string } }) {
   const [contacts, setContacts] = useState<any[]>([]);
   const [deals, setDeals] = useState<any[]>([]);
   const [activities, setActivities] = useState<any[]>([]);
@@ -209,24 +207,24 @@ export default function CRM() {
 
   useEffect(() => {
     (async () => {
-      const c = await load("contacts", SEED_CONTACTS);
-      const d = await load("deals", SEED_DEALS);
-      const a = await load("activities", SEED_ACTIVITIES);
-      const r = await load("reminders", SEED_REMINDERS);
-      const dis = await load("dismissed", []);
-      const proc = await load("processedComms", []);
+      const c = await load(user.id, "contacts", SEED_CONTACTS);
+      const d = await load(user.id, "deals", SEED_DEALS);
+      const a = await load(user.id, "activities", SEED_ACTIVITIES);
+      const r = await load(user.id, "reminders", SEED_REMINDERS);
+      const dis = await load(user.id, "dismissed", []);
+      const proc = await load(user.id, "processedComms", []);
       setContacts(c); setDeals(d); setActivities(a); setReminders(r);
       setDismissed(dis); setProcessedComms(proc);
       setLoaded(true);
     })();
   }, []);
 
-  useEffect(() => { if (loaded) save("contacts", contacts); }, [contacts, loaded]);
-  useEffect(() => { if (loaded) save("deals", deals); }, [deals, loaded]);
-  useEffect(() => { if (loaded) save("activities", activities); }, [activities, loaded]);
-  useEffect(() => { if (loaded) save("reminders", reminders); }, [reminders, loaded]);
-  useEffect(() => { if (loaded) save("dismissed", dismissed); }, [dismissed, loaded]);
-  useEffect(() => { if (loaded) save("processedComms", processedComms); }, [processedComms, loaded]);
+  useEffect(() => { if (loaded) save(user.id, "contacts", contacts); }, [contacts, loaded, user.id]);
+  useEffect(() => { if (loaded) save(user.id, "deals", deals); }, [deals, loaded, user.id]);
+  useEffect(() => { if (loaded) save(user.id, "activities", activities); }, [activities, loaded, user.id]);
+  useEffect(() => { if (loaded) save(user.id, "reminders", reminders); }, [reminders, loaded, user.id]);
+  useEffect(() => { if (loaded) save(user.id, "dismissed", dismissed); }, [dismissed, loaded, user.id]);
+  useEffect(() => { if (loaded) save(user.id, "processedComms", processedComms); }, [processedComms, loaded, user.id]);
 
   const nudges = generateNudges(contacts, deals, activities, reminders).filter((n) => !dismissed.includes(n.id));
   const pendingIncoming = SIMULATED_COMMS.filter((c) => !processedComms.includes(c.id));
@@ -343,7 +341,11 @@ Extract and return JSON with these fields:
           <div style={{ fontSize: 10, color: "#334155", letterSpacing: "1px", marginBottom: 10 }}>QUICK STATS</div>
           <div style={{ fontSize: 12, color: "#64748B", marginBottom: 6 }}>Pipeline <span style={{ color: "#60A5FA", float: "right" }}>{fmt(pipelineTotal)}</span></div>
           <div style={{ fontSize: 12, color: "#64748B", marginBottom: 6 }}>Won <span style={{ color: "#22C55E", float: "right" }}>{fmt(wonTotal)}</span></div>
-          <div style={{ fontSize: 12, color: "#64748B" }}>Contacts <span style={{ color: "#E2E8F0", float: "right" }}>{contacts.length}</span></div>
+          <div style={{ fontSize: 12, color: "#64748B", marginBottom: 14 }}>Contacts <span style={{ color: "#E2E8F0", float: "right" }}>{contacts.length}</span></div>
+          <div style={{ fontSize: 11, color: "#475569", marginBottom: 8, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{user.email}</div>
+          <button onClick={() => supabase.auth.signOut()} style={{ width: "100%", background: "none", border: "1px solid #334155", borderRadius: 8, padding: "7px 12px", color: "#64748B", fontSize: 12, cursor: "pointer", fontWeight: 500 }}>
+            Sign out
+          </button>
         </div>
       </div>
 
