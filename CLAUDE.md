@@ -4,17 +4,17 @@
 
 \## What this is
 
-NimbleCRM is an AI-powered CRM intelligence layer. It sits on top of a user's 
+NimbleCRM is an AI-powered CRM intelligence layer. It sits on top of a user's
 
 existing CRM and automates the biggest pain in CRM adoption — keeping it up to date.
 
 
 
-The core insight: CRMs fall out of date not because people are lazy, but because 
+The core insight: CRMs fall out of date not because people are lazy, but because
 
-updating them requires a separate act from the actual work. NimbleCRM eliminates 
+updating them requires a separate act from the actual work. NimbleCRM eliminates
 
-that act by scanning signals from email, voice notes, meeting notes, and other 
+that act by scanning signals from email, voice notes, meeting notes, and other
 
 sources, then automatically capturing, prompting, and validating CRM data changes.
 
@@ -26,7 +26,7 @@ For users without a CRM, NimbleCRM includes a lightweight built-in CRM.
 
 \## Target users
 
-Companies and individuals who use a CRM but struggle to keep it current. 
+Companies and individuals who use a CRM but struggle to keep it current.
 
 Also early-stage startups who need a simple CRM with AI capture built in from day one.
 
@@ -132,6 +132,16 @@ When asked to log something as a backlog item, create a GitHub Issue.
 \- TypeScript strict mode — no any types
 
 \- Never assume a UI library — check package.json first
+
+## Branching
+
+\- Always work on a feature branch — never commit directly to main
+
+\- Branch naming: feature/description, fix/description, chore/description
+
+\- Push the branch then open a PR on GitHub
+
+\- CI must pass before merging
 
 
 
