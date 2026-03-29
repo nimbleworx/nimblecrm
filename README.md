@@ -82,3 +82,5 @@ supabase-migration.sql   ← Run once in Supabase SQL editor
 .env.local.example       ← Copy to .env.local and fill in keys
 vercel.json
 ```
+
+## Pipeline test
