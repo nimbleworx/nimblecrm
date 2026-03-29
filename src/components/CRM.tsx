@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 
 // ── Supabase persistence helpers ──────────────────────────────────────────────
@@ -190,6 +191,7 @@ const avatarColor = (name: string) => {
 
 // ── Main CRM Component ────────────────────────────────────────────────────────
 export default function CRM({ user }: { user: { id: string; email?: string } }) {
+  const router = useRouter();
   const [contacts, setContacts] = useState<any[]>([]);
   const [deals, setDeals] = useState<any[]>([]);
   const [activities, setActivities] = useState<any[]>([]);
@@ -334,6 +336,15 @@ Extract and return JSON with these fields:
           <button onClick={() => { setVoiceContactId(contacts[0]?.id || ""); setVoiceNote(""); setVoiceResult(null); setModal("voice"); }}
             style={{ width: "100%", background: "#1E293B", border: "1px dashed #334155", borderRadius: 8, padding: "10px", color: "#94A3B8", fontSize: 12, cursor: "pointer", fontWeight: 500 }}>
             🎙️ Drop a voice note
+          </button>
+        </div>
+
+        <div style={{ padding: "8px 20px" }}>
+          <button
+            onClick={() => router.push("/onboarding")}
+            style={{ width: "100%", background: "none", border: "1px solid #1E293B", borderRadius: 8, padding: "9px 12px", color: "#64748B", fontSize: 12, cursor: "pointer", fontWeight: 500, textAlign: "left" as const }}
+          >
+            🔌 Integrations
           </button>
         </div>
 

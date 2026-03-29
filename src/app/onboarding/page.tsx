@@ -3,31 +3,16 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import type { User } from "@supabase/supabase-js";
 import { supabase } from "@/lib/supabase";
-import CRM from "@/components/CRM";
+import IntegrationWizard from "@/components/IntegrationWizard";
 
-export default function Home() {
+export default function OnboardingPage() {
   const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    supabase.auth.getSession().then(async ({ data: { session } }) => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
       if (session?.user) {
-        try {
-          const { data: wizardData } = await supabase
-            .from("crm_store")
-            .select("value")
-            .eq("user_id", session.user.id)
-            .eq("key", "wizard_completed")
-            .maybeSingle();
-          if (!wizardData) {
-            router.replace("/onboarding");
-            setLoading(false);
-            return;
-          }
-        } catch {
-          // If the check fails, proceed to the CRM rather than blocking the user
-        }
         setUser(session.user);
       } else {
         router.replace("/login");
@@ -39,7 +24,6 @@ export default function Home() {
       if (session?.user) {
         setUser(session.user);
       } else {
-        setUser(null);
         router.replace("/login");
       }
     });
@@ -55,5 +39,5 @@ export default function Home() {
     );
   }
 
-  return <CRM user={user} />;
+  return <IntegrationWizard user={user} />;
 }
