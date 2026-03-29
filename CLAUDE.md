@@ -90,6 +90,23 @@ Built-in lightweight CRM available for users without an existing CRM.
 
 
 
+\## Local development environment
+
+Two separate file systems are in play:
+
+\- Claude Code runs in Linux/WSL at `/home/user/nimblecrm`
+\- The dev server runs from Windows PowerShell at `C:\Users\davie\Projects\nimblecrm`
+
+These are not the same files. After making changes, the user must pull them into the Windows copy before testing:
+
+```powershell
+git pull origin <branch>
+```
+
+Then restart the dev server (`npm run dev`) to pick up the changes.
+
+Do not tell the user to edit files directly or clear caches until after they have pulled the latest changes.
+
 \## Backlog
 
 Managed in GitHub Issues: https://github.com/nimbleworx/nimblecrm/issues
